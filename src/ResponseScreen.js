@@ -26,7 +26,7 @@ const apiRequest = async () => {
         apiUrl,
         {
           prompt: combinedPrompt,
-          max_tokens: 740,
+          max_tokens: 1024,
           temperature: 1,
         },
         {
