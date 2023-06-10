@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, StatusBar} from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, StatusBar, SafeAreaView,ScrollView} from 'react-native';
 import Slider from '@react-native-community/slider';
 import { createStackNavigator} from '@react-navigation/stack';
 import { Entypo } from 'react-native-vector-icons';
@@ -20,18 +20,18 @@ const ConceptMe = ({ navigation }) => {
     navigation.navigate('ResponseScreen', { topic: textInput, age: ageInput });
   }
   return (
-    <View style={styles.mainContainer}>
-      <StatusBar backgroundColor="#f7e6fa" />
+    <SafeAreaView  style={styles.mainContainer}>    
+      <StatusBar backgroundColor="#f5f5f5" />
       <TouchableOpacity style={styles.noteButton} onPress={() => navigation.navigate('NoteScreen')}>
-      <Entypo name="book" size={24} color="black" />
+      <Entypo name="book" size={22} color="black" />
       </TouchableOpacity>
       <View style={styles.mottoContainer}>
       <Text style={styles.mottoText}>Break Barriers,</Text>
       <Text style={styles.mottoText}>Be Extraordinary </Text>
       </View>
       <View style={styles.divider}></View>
-      <View style={styles.container}>
-      <Text style={styles.title}>Conceptualizer</Text>
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps='handled'>
+      <Text style={styles.title}>X-Plainer</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -63,8 +63,8 @@ const ConceptMe = ({ navigation }) => {
       >
         <Text style={styles.buttonText}>Go</Text>
       </TouchableOpacity>
-      </View>
-    </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -72,7 +72,7 @@ const ConceptMe = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f7e6fa',
+    backgroundColor: '#f5f5f5',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     flex: 1,
-    backgroundColor: '#f7e6fa',
+    backgroundColor: '#f5f5f5',
     padding: 8,
   },
   title: {
@@ -120,10 +120,10 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 10,
     marginTop: 10,
-    backgroundColor: '#f7e6fa',
+    backgroundColor: '#f5f5f5',
   },
   button: {
-    backgroundColor:'#dac8fa',
+    backgroundColor:'#90ee90',
     width: '100%',
     height: 50,
     borderRadius: 30,
@@ -142,19 +142,18 @@ const styles = StyleSheet.create({
   },
   noteButton: {
     alignSelf: 'flex-end',
-    alignItems: 'center',
-    backgroundColor: '#a7dbd8',
-    borderWidth: 1.5,
-    borderColor: 'black',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginTop: 10,
-    borderRightWidth: 4,
-    borderBottomWidth: 5,
-    justifyContent: 'center',
-    width: 60,
-
+  alignItems: 'center',
+  backgroundColor: '#a7dbd8',
+  borderWidth: 1.5,
+  borderColor: 'black',
+  borderRadius: 10,
+  paddingHorizontal: 10,
+  paddingVertical: 5,
+  marginTop: 10,
+  borderRightWidth: 4,
+  borderBottomWidth: 5,
+  justifyContent: 'center',
+  width: 50,
   },
   mottoText: {
     marginTop: 5,
@@ -172,6 +171,7 @@ const styles = StyleSheet.create({
   mottoContainer: {
     marginBottom: 10,
   },
+  
 });
 export default ConceptMe;
 

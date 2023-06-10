@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Alert, TextInput,SafeAreaView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator} from '@react-navigation/stack';
 import { Foundation, MaterialIcons } from 'react-native-vector-icons';
@@ -14,9 +14,6 @@ const [filteredNotes, setFilteredNotes] = useState([]);
   useEffect(() => {
     retrieveNotes();
   }, []);
-  const handleAddNote = () => {
-    navigation.navigate('TypeNoteScreen');
-}
 
 const retrieveNotes = async () => {
   try {
@@ -28,6 +25,10 @@ const retrieveNotes = async () => {
   } catch (error) {
     console.log('Error retrieving notes:', error);
   }
+};
+
+const handleGoBack = () => {
+  navigation.goBack();
 };
 
 const handleSearch = (query) => {
@@ -68,7 +69,7 @@ const handleSearch = (query) => {
   
 
   return (
-    <View style={styles.mainContainer}>
+    <SafeAreaView style={styles.mainContainer}>
     <ScrollView contentContainerStyle={styles.container}>
     <TextInput
   style={styles.searchInput}
@@ -102,26 +103,30 @@ const handleSearch = (query) => {
               
             ))}
           </ScrollView>
+    
         )}
       </ScrollView>
-    </View>
+      <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+          <MaterialIcons name="arrow-back-ios" size={18} color="black" />
+          </TouchableOpacity>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: '#f7e6fa',
+        backgroundColor: '#f5f5f5',
+        padding:16,
       },
   container: {
     flex: 1,
     padding: 16,
     borderWidth: 1.5,
-    margin: 15,
     borderRadius: 10,
     borderRightWidth: 6,
     borderBottomWidth: 5,
-    backgroundColor: '#f7e6fa',
+    backgroundColor: '#f5f5f5',
   },
   noteText: {
     fontSize: 16,
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
         padding: 5,
         margin: 8,
         borderColor: 'black',
-        backgroundColor:'#daf5f0',
+        backgroundColor:'#bff5ea',
         borderRadius: 4,
         borderRightWidth: 3,
         borderBottomWidth: 4,
@@ -166,6 +171,21 @@ const styles = StyleSheet.create({
         margin: 5,
         fontFamily: 'monospace',
         backgroundColor: 'white',
+      },
+      backButton: {
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: '#fdfd96',
+        borderWidth: 1.5,
+        borderColor: 'black',
+        borderRadius: 5,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        marginTop: 10,
+        borderRightWidth: 4,
+        borderBottomWidth: 5,
+        opacity: 1,
+        
       },
 });
 

@@ -1,8 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, ScrollView, Dimensions, SafeAreaView} from 'react-native';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MaterialIcons, Entypo} from 'react-native-vector-icons';
+import * as Animatable from 'react-native-animatable';
+
 
 
 
@@ -11,6 +13,10 @@ const ResponseScreen = ({ navigation, route }) => {
     const [loading, setLoading] = useState(true);
     const [text, setText] = useState("");
     const [addToNoteDisabled, setAddToNoteDisabled] = useState(true);
+    const [noteAdded, setNoteAdded] = useState(false);
+    const [animating, setAnimating] = useState(false);
+
+
 
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
@@ -60,6 +66,11 @@ const apiRequest = async () => {
       const noteValue = `${topic}\n${text}`
 
       await AsyncStorage.setItem(noteKey, noteValue);
+      setNoteAdded(true);
+      setAnimating(true);
+      setTimeout(() => {
+        setNoteAdded(true);
+      }, 500);
 
     } catch (error) {
       console.log('Error saving note:', error);
@@ -70,9 +81,9 @@ const apiRequest = async () => {
   const windowHeight = Dimensions.get('window').height;
 
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.noteButton} onPress={() => navigation.navigate('NoteScreen')}>
-      <Entypo name="book" size={20} color="black" />
+      <Entypo name="book" size={22} color="black" />
       </TouchableOpacity>
         <StatusBar backgroundColor="#f7e6fa" />
         <ScrollView contentContainerStyle={styles.scrollContent} >
@@ -119,15 +130,30 @@ const apiRequest = async () => {
         </ScrollView>
         <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-        <MaterialIcons name="arrow-back-ios" size={20} color="black" />
+        <MaterialIcons name="arrow-back-ios" size={17} color="black" />
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.AddToNote, addToNoteDisabled ? styles.disabledButton : null]}
-          onPress={handleAddToNote}
-          disabled={addToNoteDisabled}>
-          <Text style={styles.addNoteButton}>Add To Notes</Text>
-          </TouchableOpacity>
+        <TouchableOpacity
+  style={styles.AddToNote}
+  onPress={handleAddToNote}
+  disabled={addToNoteDisabled || noteAdded}
+>
+{animating ? (
+    <Animatable.Text
+      style={styles.addNoteButton}
+      animation="fadeOut"
+      duration={500}
+      onAnimationEnd={() => setAnimating(false)}
+    >
+      Adding...
+    </Animatable.Text>
+  ) : (
+    <Text style={styles.addNoteButton}>
+      {noteAdded ? 'Added to Note' : 'Add to Note'}
+    </Text>
+  )}
+</TouchableOpacity>
         </View>
-      </View>
+      </SafeAreaView>
     );
   };
 
@@ -135,7 +161,7 @@ const apiRequest = async () => {
     container: {
       flexDirection: 'column',
       flex: 1,
-    backgroundColor: '#f7e6fa',
+    backgroundColor: '#f5f5f5',
       justifyContent: 'center',
       alignItems: 'center',
       padding: 16,
@@ -145,7 +171,7 @@ const apiRequest = async () => {
       justifyContent: 'center',
     },
     responseContainer: {
-    backgroundColor: '#f7e6fa',
+    backgroundColor: '#f5f5f5',
       borderRadius: 10,
       borderWidth: 1.5,
       borderRightWidth: 5,
@@ -156,7 +182,7 @@ const apiRequest = async () => {
     },
   
     heading: {
-      fontSize: 26,
+      fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 10,
       fontFamily: 'monospace',
@@ -179,7 +205,7 @@ const apiRequest = async () => {
     backButton: {
       alignItems: 'center',
       alignSelf: 'center',
-      backgroundColor: '#dac8fa',
+      backgroundColor: '#fdfd96',
       borderWidth: 1.5,
       borderColor: 'black',
       borderRadius: 5,
@@ -188,7 +214,7 @@ const apiRequest = async () => {
       marginTop: 10,
       borderRightWidth: 4,
       borderBottomWidth: 5,
-      opacity: 0.6,
+      opacity: 0.5,
       
     },
     skeleton: {
@@ -216,7 +242,7 @@ const apiRequest = async () => {
     borderRightWidth: 4,
     borderBottomWidth: 5,
     justifyContent: 'center',
-    width: 60,
+    width: 50,
     },
     buttonContainer: {
       flexDirection: 'row',
@@ -224,7 +250,7 @@ const apiRequest = async () => {
       alignSelf: 'center',
     },
     addNoteButton:{
-      backgroundColor: '#dac8fa',
+      backgroundColor: '#fdfd96',
       borderWidth: 1.5,
       borderColor: 'black',
       borderRadius: 5,
@@ -233,7 +259,7 @@ const apiRequest = async () => {
       marginTop: 10,
       borderRightWidth: 4,
       borderBottomWidth: 5,
-      marginLeft: 60,
+      marginLeft: 100,
       fontFamily: 'monospace',
     },
     disabledButton:{
