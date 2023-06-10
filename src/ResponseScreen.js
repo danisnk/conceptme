@@ -22,7 +22,7 @@ const ResponseScreen = ({ navigation, route }) => {
 
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
-    const combinedPrompt = `Please provide a very descriptive(100 words) explanation of ${topic} tailored for a ${age}-year-old. 
+    const combinedPrompt = `Please provide a descriptive(about 150-400 words) explanation of ${topic} tailored for a ${age}-year-old. 
                             The response should use simple language and avoid complex terminology if the age of 
                             the user belongs to very young people, while allowing more complexity for older audiences. 
                             Additionally, could you please suggest some related queries or questions that the user might 
@@ -80,25 +80,31 @@ const apiRequest = async () => {
       );
       const responseText = response.data.choices[0].text.trim();
       query = responseText.startsWith('?',) ? responseText.slice(1) : responseText;
-      const regex = /^[-•]\s*(.*)$/gm;
-      const matches = [];
-      let match;
-      while ((match = regex.exec(query)) !== null) {
-        matches.push(match[1]);
-      }
+      console.log(query);
+      setLoading(false);
+ 
+      console.log("hi-1");
+      const regex = /[-•]\s*(.*?)(?=\s*[-•]|$)/g;
+      const matches = query.match(regex).map(match => match.trim());
+
+
+      console.log("hi0");
       setSuggestedQueries(matches);
 
-      const regex2 = /^(.*?)(?:\s*[-–—]\s*|$)/gm;
-    const matches2 = [];
-    let match2;
+      const regex2 = /^([^-]*)-/gm;
+const matches2 = [];
+let match2;
 
-    while ((match2 = regex2.exec(query)) !== null) {
-      matches2.push(match2[1]);
-    }
+while ((match2 = regex2.exec(query)) !== null) {
+  matches2.push(match2[1].trim());
+}
+
+
+      console.log("hi2");
+
 
     const filteredText = matches2.join('');
       setText(filteredText);
-      setLoading(false);
       setAddToNoteDisabled(false);
     } catch (error) {
 
@@ -186,7 +192,7 @@ const apiRequest = async () => {
             style={styles.queryButton}
             onPress={() => handleQueryButtonPress(query)}
           >
-            <Text style={styles.queryButtonText}>-{query}</Text>
+            <Text style={styles.queryButtonText}>{query}</Text>
           </TouchableOpacity>
         ))}
       </View>
