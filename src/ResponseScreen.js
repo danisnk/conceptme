@@ -15,16 +15,52 @@ const ResponseScreen = ({ navigation, route }) => {
     const [addToNoteDisabled, setAddToNoteDisabled] = useState(true);
     const [noteAdded, setNoteAdded] = useState(false);
     const [animating, setAnimating] = useState(false);
+    const [suggestedQueries, setSuggestedQueries] = useState([]);
+    let query;
 
 
 
     const apiKey = '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';
     const apiUrl = 'https://api.openai.com/v1/engines/text-davinci-003/completions';
-    const combinedPrompt = `Please provide a descriptive explanation of ${topic} tailored for a ${age}-year-old. 
+    const combinedPrompt = `Please provide a very descriptive(100 words) explanation of ${topic} tailored for a ${age}-year-old. 
                             The response should use simple language and avoid complex terminology if the age of 
                             the user belongs to very young people, while allowing more complexity for older audiences. 
                             Additionally, could you please suggest some related queries or questions that the user might 
-                            have about ${topic}. Do not address the person by anything.`;
+                            have about ${topic}. Do not address the person by anything. Send the queries with "-" as denoter 
+                            and there should be some new lines between the explanation and related queries.`;
+
+
+const  handleQueryButtonPress = async (query) =>{
+  try {
+    setLoading(true);
+    const response = await axios.post(
+      apiUrl,
+      {
+        prompt: query,
+        max_tokens: 1024,
+        temperature: 1,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${apiKey}`,
+        },
+      }
+    );
+    const responseText = response.data.choices[0].text.trim();
+    query = responseText.startsWith('?',) ? responseText.slice(1) : responseText;
+ 
+    setText(query);
+    setLoading(false);
+    setAddToNoteDisabled(false);
+  } catch (error) {
+
+    console.error("API Request Error", error);
+    alert('An error occurred while processing your request.');
+  }
+}
+
+
   
 const apiRequest = async () => {
     try {
@@ -43,7 +79,25 @@ const apiRequest = async () => {
         }
       );
       const responseText = response.data.choices[0].text.trim();
-      setText(responseText.startsWith('?',) ? responseText.slice(1) : responseText);
+      query = responseText.startsWith('?',) ? responseText.slice(1) : responseText;
+      const regex = /^[-•]\s*(.*)$/gm;
+      const matches = [];
+      let match;
+      while ((match = regex.exec(query)) !== null) {
+        matches.push(match[1]);
+      }
+      setSuggestedQueries(matches);
+
+      const regex2 = /^(.*?)(?:\s*[-–—]\s*|$)/gm;
+    const matches2 = [];
+    let match2;
+
+    while ((match2 = regex2.exec(query)) !== null) {
+      matches2.push(match2[1]);
+    }
+
+    const filteredText = matches2.join('');
+      setText(filteredText);
       setLoading(false);
       setAddToNoteDisabled(false);
     } catch (error) {
@@ -85,7 +139,7 @@ const apiRequest = async () => {
         <TouchableOpacity style={styles.noteButton} onPress={() => navigation.navigate('NoteScreen')}>
       <Entypo name="book" size={22} color="black" />
       </TouchableOpacity>
-        <StatusBar backgroundColor="#f7e6fa" />
+        <StatusBar backgroundColor="#f5f5f5" />
         <ScrollView contentContainerStyle={styles.scrollContent} >
         
           <View style={[styles.responseContainer, { width: windowWidth * 0.92, height: windowHeight * 0.82 }]}>
@@ -123,7 +177,21 @@ const apiRequest = async () => {
                 <View style={styles.skeletonLine}></View>
               </View>
             ) : (
-              <Text style={styles.responseText}>{text}</Text>
+              <View>
+      <Text style={styles.responseText}>{text}</Text>
+      <View style={styles.suggestedQueries}>
+        {suggestedQueries.map((query, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.queryButton}
+            onPress={() => handleQueryButtonPress(query)}
+          >
+            <Text style={styles.queryButtonText}>-{query}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    </View>
+              
             )}
           </ScrollView>
           </View>
@@ -264,6 +332,25 @@ const apiRequest = async () => {
     },
     disabledButton:{
       opacity: 0.5,
+    },
+    suggestedQueries: {
+      marginTop: 10,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+    },
+    queryButton: {
+      backgroundColor: '#f5f5f5',
+      borderRadius: 4,
+      margin: 5,
+      borderWidth: 1,
+      padding: 3,
+      borderRightWidth: 3,
+      borderBottomWidth: 4,
+      backgroundColor: '#e3dff2',
+    },
+    queryButtonText:{
+      fontFamily: 'monospace',
     }
   });
 

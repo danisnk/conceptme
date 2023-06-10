@@ -1,10 +1,11 @@
 import React from 'react';
 import {  Text, StyleSheet ,SafeAreaView, TouchableOpacity, View} from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import {MaterialIcons, Entypo} from 'react-native-vector-icons';
+import {MaterialIcons} from 'react-native-vector-icons';
 
 const FullNoteScreen = ({ navigation, route }) => {
   const { note } = route.params;
+  
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -16,7 +17,7 @@ const FullNoteScreen = ({ navigation, route }) => {
             <ScrollView showsVerticalScrollIndicator={false}>
             <Text style={styles.heading}>{note.split('\n')[0]}</Text>
             <View style={styles.divider}></View>
-      <Text style={styles.fullNoteText}>{note.split('\n').slice(1).join(" ")}</Text>
+      <Text style={styles.fullNoteText}>{note.split('\n').slice(1).join("\n")}</Text>
       </ScrollView>
     </ScrollView>
     <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
