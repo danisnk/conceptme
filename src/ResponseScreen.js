@@ -60,7 +60,6 @@ const apiRequest = async () => {
 
       await AsyncStorage.setItem(noteKey, text);
 
-      navigation.goBack();
     } catch (error) {
       console.log('Error saving note:', error);
     }
