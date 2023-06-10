@@ -1,20 +1,30 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import ConceptMe from './src/ConceptMe';
+import ResponseScreen from './src/ResponseScreen';
+import NoteScreen from './src/NoteScreen';
+import FullNoteScreen from './src/FullNoteScreen';
+import { NavigationContainer } from '@react-navigation/native';
+import {TransitionPresets  } from '@react-navigation/stack';
+import { createStackNavigator} from '@react-navigation/stack';
 
-export default function App() {
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="ConceptMe"
+        screenOptions={{
+          headerShown: false,
+          ...TransitionPresets.FadeFromBottomAndroid, 
+        }}
+      >
+        <Stack.Screen name="ConceptMe" component={ConceptMe} />
+        <Stack.Screen name="ResponseScreen" component={ResponseScreen} />
+        <Stack.Screen name="NoteScreen" component={NoteScreen} />
+        <Stack.Screen name="FullNoteScreen" component={FullNoteScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
