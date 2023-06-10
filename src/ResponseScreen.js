@@ -27,7 +27,7 @@ const apiRequest = async () => {
         {
           prompt: combinedPrompt,
           max_tokens: 740,
-          temperature: 0.5,
+          temperature: 1,
         },
         {
           headers: {
@@ -57,8 +57,9 @@ const apiRequest = async () => {
   const handleAddToNote = async () => {
     try {
       const noteKey = `note_${Date.now()}`;
+      const noteValue = `${topic}\n${text}`
 
-      await AsyncStorage.setItem(noteKey, text);
+      await AsyncStorage.setItem(noteKey, noteValue);
 
     } catch (error) {
       console.log('Error saving note:', error);
@@ -147,8 +148,8 @@ const apiRequest = async () => {
     backgroundColor: '#f7e6fa',
       borderRadius: 10,
       borderWidth: 1.5,
-      borderRightWidth: 4,
-      borderBottomWidth: 5,
+      borderRightWidth: 5,
+      borderBottomWidth: 6,
       marginTop: 5,
       padding: 8,
       alignItems: 'center',
@@ -177,16 +178,18 @@ const apiRequest = async () => {
     },
     backButton: {
       alignItems: 'center',
+      alignSelf: 'center',
       backgroundColor: '#dac8fa',
       borderWidth: 1.5,
       borderColor: 'black',
-      borderRadius: 10,
+      borderRadius: 5,
       paddingHorizontal: 10,
       paddingVertical: 5,
       marginTop: 10,
       borderRightWidth: 4,
       borderBottomWidth: 5,
       opacity: 0.6,
+      
     },
     skeleton: {
       width: '100%',
@@ -218,12 +221,13 @@ const apiRequest = async () => {
     buttonContainer: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignSelf: 'center',
     },
     addNoteButton:{
       backgroundColor: '#dac8fa',
       borderWidth: 1.5,
       borderColor: 'black',
-      borderRadius: 10,
+      borderRadius: 5,
       paddingHorizontal: 10,
       paddingVertical: 5,
       marginTop: 10,
