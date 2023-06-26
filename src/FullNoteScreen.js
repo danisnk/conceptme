@@ -1,11 +1,11 @@
 import React from 'react';
-import {  Text, StyleSheet ,SafeAreaView, TouchableOpacity, View} from 'react-native';
+import { Text, StyleSheet, SafeAreaView, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import {MaterialIcons} from 'react-native-vector-icons';
+import { MaterialIcons } from 'react-native-vector-icons';
 
 const FullNoteScreen = ({ navigation, route }) => {
   const { note } = route.params;
-  
+
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -13,26 +13,26 @@ const FullNoteScreen = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-        <ScrollView contentContainerStyle={styles.container}> 
-            <ScrollView showsVerticalScrollIndicator={false}>
-            <Text style={styles.heading}>{note.split('\n')[0]}</Text>
-            <View style={styles.divider}></View>
-      <Text style={styles.fullNoteText}>{note.split('\n').slice(1).join("\n")}</Text>
+      <ScrollView contentContainerStyle={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={styles.heading}>{note.split('\n')[0]}</Text>
+          <View style={styles.divider}></View>
+          <Text style={styles.fullNoteText} numberOfLines={0}>{note.split('\n').slice(1).join("\n")}</Text>
+        </ScrollView>
       </ScrollView>
-    </ScrollView>
-    <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+      <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
         <MaterialIcons name="arrow-back-ios" size={18} color="black" />
-        </TouchableOpacity>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex:1,
-        padding: 16,
-        backgroundColor: '#f5f5f5',
-    },
+  mainContainer: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#f5f5f5',
+  },
   container: {
     flex: 1,
     padding: 16,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   },
   fullNoteText: {
     fontSize: 16,
-    fontFamily: 'monospace',
+    
   },
   scrollContent: {
     margin: 5,
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 4,
     borderBottomWidth: 5,
     opacity: 1,
-    
+
   },
   divider: {
     width: '100%',
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    fontFamily: 'monospace',
+    
     textAlign: 'center',
   },
 
