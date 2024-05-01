@@ -34,7 +34,7 @@ const ResponseScreen = ({ navigation, route }) => {
   let query;
 
 
-  const apiKey = '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';
+  
   const apiUrl = 'https://api.openai.com/v1/chat/completions';
   const combinedPrompt = `Please provide a descriptive explanation/answer for the topic/question "${subject}" that is suitable for a ${age}-year-old audience. The response should be between 125 and 400 words long. Use simple language and avoid complex terminology when explaining the topic to young users, while allowing for more complexity when the audience is older. 
     In addition, please suggest 4-5 related queries or questions that the user might have about "${subject}" in array format. Suggest 5 quiz questions based on response you gave for an assessment test in an array format.`;
